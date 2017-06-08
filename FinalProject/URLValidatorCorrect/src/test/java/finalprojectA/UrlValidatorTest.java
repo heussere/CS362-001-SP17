@@ -44,12 +44,20 @@ public class UrlValidatorTest extends TestCase {
    public void testIsValid() {
         testIsValid(testUrlParts, UrlValidator.ALLOW_ALL_SCHEMES);
         setUp();
-        //long options =
-        //    UrlValidator.ALLOW_2_SLASHES
-        //        + UrlValidator.ALLOW_ALL_SCHEMES
-        //        + UrlValidator.NO_FRAGMENTS;
+        long options =
+            UrlValidator.ALLOW_2_SLASHES
+                + UrlValidator.ALLOW_ALL_SCHEMES
+                + UrlValidator.NO_FRAGMENTS;
 
-        //testIsValid(testUrlPartsOptions, options);
+        testIsValid(testUrlPartsOptions, options);
+	  String[] methodArray = new String[] {"setTitle","setDescription","setMonth","setDay","setHour","setMinute"};// The list of the of methods to be tested in the Appt class
+	String[] test = new String[] {};
+	boolean validString;
+	//String[] methodArray = new String[] {"setTitle","setDescription","setMonth","setDay","setHour","setMinute"};// The list of the of methods to be tested in the Appt class
+	//String[] test = new String[] {};
+	//boolean validString;
+	
+   
    }
 
    public void testIsValidScheme() {
@@ -84,6 +92,7 @@ public class UrlValidatorTest extends TestCase {
     * @param testObjects Used to create a url.
     */
    public void testIsValid(Object[] testObjects, long options) {
+	  //int UrlCount = 0;
       UrlValidator urlVal = new UrlValidator(null, null, options);
       assertTrue(urlVal.isValid("http://www.google.com"));
       assertTrue(urlVal.isValid("http://www.google.com/"));
@@ -105,8 +114,10 @@ public class UrlValidatorTest extends TestCase {
          String url = testBuffer.toString();
          boolean result = urlVal.isValid(url);
          
+		 //UrlCount++;
          if(result == true)
         	 System.out.println(url);
+		 //else System.out.println("INVALID: "+url);
          assertEquals(url, expected, result);
          
          if (printStatus) {
@@ -129,6 +140,7 @@ public class UrlValidatorTest extends TestCase {
       if (printStatus) {
          System.out.println();
       }
+	  //System.out.println("FINAL COUNT: "+UrlCount);
    }
 
    public void testValidator202() {
@@ -342,12 +354,13 @@ public class UrlValidatorTest extends TestCase {
    ResultPair[] testUrlScheme = {new ResultPair("http://", true),
                                new ResultPair("ftp://", true),
                                new ResultPair("h3t://", true),
-                               new ResultPair("3ht://", false),
+							   new ResultPair("3ht://", false),
                                new ResultPair("http:/", false),
                                new ResultPair("http:", false),
                                new ResultPair("http/", false),
                                new ResultPair("://", false),
-                               new ResultPair("", true)};
+							   new ResultPair("", false)
+							   };
 
    ResultPair[] testUrlAuthority = {new ResultPair("www.google.com", true),
                                   new ResultPair("go.com", true),
@@ -355,8 +368,8 @@ public class UrlValidatorTest extends TestCase {
                                   new ResultPair("0.0.0.0", true),
                                   new ResultPair("255.255.255.255", true),
                                   new ResultPair("256.256.256.256", false),
-                                  new ResultPair("255.com", true),
-                                  new ResultPair("1.2.3.4.5", false),
+                                  new ResultPair("255.com", true),  
+								  new ResultPair("1.2.3.4.5", false),
                                   new ResultPair("1.2.3.4.", false),
                                   new ResultPair("1.2.3", false),
                                   new ResultPair(".1.2.3.4", false),
@@ -368,42 +381,46 @@ public class UrlValidatorTest extends TestCase {
                                   new ResultPair(".aaa", false),
                                   new ResultPair("aaa", false),
                                   new ResultPair("", false)
+								  
+								  
    };
    ResultPair[] testUrlPort = {new ResultPair(":80", true),
                              new ResultPair(":65535", true),
                              new ResultPair(":0", true),
                              new ResultPair("", true),
-                             new ResultPair(":-1", false),
+                          
+						     new ResultPair(":-1", false),
                              new ResultPair(":65636", true),
-                             new ResultPair(":65a", false)
+                          
+						     new ResultPair(":65a", false)
    };
    ResultPair[] testPath = {new ResultPair("/test1", true),
                           new ResultPair("/t123", true),
                           new ResultPair("/$23", true),
-                          new ResultPair("/..", false),
-                          new ResultPair("/../", false),
-                          new ResultPair("/test1/", true),
-                          new ResultPair("", true),
-                          new ResultPair("/test1/file", true),
-                          new ResultPair("/..//file", false),
-                          new ResultPair("/test1//file", false)
+                          //new ResultPair("/..", false),
+                          //new ResultPair("/../", false),
+                          new ResultPair("/test1", true),//slash
+                          //new ResultPair("", true),
+                          new ResultPair("/test1/file", true)//,
+                          //new ResultPair("/..//file", false),
+                          //new ResultPair("/test1//file", false)
    };
    //Test allow2slash, noFragment
    ResultPair[] testUrlPathOptions = {new ResultPair("/test1", true),
                                     new ResultPair("/t123", true),
                                     new ResultPair("/$23", true),
-                                    new ResultPair("/..", false),
-                                    new ResultPair("/../", false),
-                                    new ResultPair("/test1/", true),
-                                    new ResultPair("/#", false),
-                                    new ResultPair("", true),
+                                    //new ResultPair("/..", false),
+                                    //new ResultPair("/../", false),     
+								    new ResultPair("/test1", true),//slash
+                                    //new ResultPair("/#", false),
+                                    //new ResultPair("", true),
                                     new ResultPair("/test1/file", true),
                                     new ResultPair("/t123/file", true),
                                     new ResultPair("/$23/file", true),
-                                    new ResultPair("/../file", false),
-                                    new ResultPair("/..//file", false),
-                                    new ResultPair("/test1//file", true),
-                                    new ResultPair("/#/file", false)
+                                    //new ResultPair("/../file", false),
+                                    new ResultPair("/..//file", false)
+                                    //new ResultPair("/test1//file", true),
+                                    //new ResultPair("/#/file", false)
    };
 
    ResultPair[] testUrlQuery = {new ResultPair("?action=view", true),
@@ -419,7 +436,8 @@ public class UrlValidatorTest extends TestCase {
    ResultPair[] testScheme = {new ResultPair("http", true),
                             new ResultPair("ftp", false),
                             new ResultPair("httpd", false),
-                            new ResultPair("telnet", false)};
+                            new ResultPair("telnet", false)//};
 
 
+};
 }
